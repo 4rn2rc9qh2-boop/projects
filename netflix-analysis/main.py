@@ -3,7 +3,6 @@ from tkinter import ttk
 
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-
 import networkx as nx
 
 from data_loader import load_and_clean_data
@@ -17,7 +16,7 @@ from similarity import (
 from trends import generate_tv_show_growth_summary
 
 
-# ================= DATA =================
+#data
 
 df = load_and_clean_data("data/netflix_titles.csv")
 
@@ -27,7 +26,7 @@ trend_canvas = None
 network_canvas = None
 
 
-# ================= MAIN WINDOW =================
+#main root
 
 root = tk.Tk()
 
@@ -36,7 +35,7 @@ root.title("Netflix Analyzer")
 root.geometry("1200x900")
 
 
-# ================= TABS =================
+#tabs
 
 notebook = ttk.Notebook(root)
 
@@ -49,11 +48,8 @@ notebook.add(main_tab, text="Main")
 notebook.add(analytics_tab, text="Analytics")
 
 
-# =========================================================
-# ===================== MAIN TAB ==========================
-# =========================================================
-
-# ---------------- TOP COUNTRIES ----------------
+#main tab
+#top coutries
 
 countries_label = tk.Label(
     main_tab,
@@ -62,7 +58,6 @@ countries_label = tk.Label(
 )
 
 countries_label.pack(pady=10)
-
 countries_text = tk.Text(
     main_tab,
     height=10,
@@ -73,18 +68,10 @@ countries_text.pack(pady=10)
 
 
 def show_top_countries():
-
     countries_text.delete("1.0", tk.END)
-
     top_countries = get_top_countries(df)
-
     for country, count in top_countries.items():
-
-        countries_text.insert(
-            tk.END,
-            f"{country}: {count}\n"
-        )
-
+        countries_text.insert(tk.END,f"{country}: {count}\n")
 
 countries_button = tk.Button(
     main_tab,
@@ -94,8 +81,7 @@ countries_button = tk.Button(
 
 countries_button.pack(pady=10)
 
-
-# ---------------- RECOMMENDATIONS ----------------
+#recommendations
 
 recommendation_label = tk.Label(
     main_tab,
@@ -104,7 +90,6 @@ recommendation_label = tk.Label(
 )
 
 recommendation_label.pack(pady=10)
-
 recommendation_entry = tk.Entry(
     main_tab,
     width=40
@@ -122,26 +107,17 @@ recommendation_text.pack(pady=10)
 
 
 def show_recommendations():
-
     recommendation_text.delete("1.0", tk.END)
-
     title = recommendation_entry.get()
-
-    recommendations = get_recommendations(
-        title,
-        df,
-        matrix
-    )
+    recommendations = get_recommendations(title,df,matrix)
 
     if recommendations.empty:
-
         recommendation_text.insert(
             tk.END,
             "Movie not found"
         )
 
         return
-
     for _, row in recommendations.iterrows():
 
         recommendation_text.insert(
@@ -159,12 +135,9 @@ recommendation_button = tk.Button(
 recommendation_button.pack(pady=10)
 
 
-# =========================================================
-# ================== ANALYTICS TAB ========================
-# =========================================================
+# analitics tab
 
-# ---------------- TRENDS ----------------
-
+#trends
 trends_label = tk.Label(
     analytics_tab,
     text="Netflix Trends",
@@ -184,11 +157,8 @@ trends_text.pack(pady=10)
 
 def show_trends():
     global trend_canvas
-
     trends_text.delete("1.0", tk.END)
-
     summary = generate_tv_show_growth_summary(df)
-
     trends_text.insert(
         tk.END,
         summary
@@ -219,11 +189,8 @@ def show_trends():
         )
 
     ax.set_title("Netflix Trends")
-
     ax.set_xlabel("Year")
-
     ax.set_ylabel("Count")
-
     ax.legend()
 
     if trend_canvas is not None:
@@ -249,7 +216,7 @@ trends_button = tk.Button(
 trends_button.pack(pady=10)
 
 
-# ---------------- ACTOR NETWORK ----------------
+#actor network
 
 network_label = tk.Label(
     analytics_tab,
@@ -376,6 +343,6 @@ network_button = tk.Button(
 network_button.pack(pady=10)
 
 
-# ================= START APP =================
+#ready app
 
 root.mainloop()
